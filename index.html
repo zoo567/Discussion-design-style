@@ -28,22 +28,24 @@
       /*
         试色方案记录：
         上一套色彩为
-        --yellow: #fff36a; --yellow-deep: #e1d52b;
-        --core: #efc4fa; --core-deep: #d38ce6;
-        --support: #b6e3ff; --support-deep: #72c5f1;
-        --style: #bec2ff; --style-deep: #8f99ff;
-        --visual: #dfff79; --visual-deep: #bade35;
+        --yellow: #FCF06A; --yellow-deep: #E6D92D;
+        --core: #EAC3FC; --core-deep: #D481E8;
+        --support: #B0CBF1; --support-deep: #75AEE6;
+        --style: #C3C6FB; --style-deep: #8E96EF;
+        --visual: #6EBB7B; --visual-deep: #4DA45F;
       */
-      --yellow: #FCF06A;
-      --yellow-deep: #E6D92D;
-      --core: #EAC3FC;
-      --core-deep: #D481E8;
-      --support: #B0CBF1;
-      --support-deep: #75AEE6;
-      --style: #C3C6FB;
-      --style-deep: #8E96EF;
-      --visual: #6EBB7B;
-      --visual-deep: #4DA45F;
+      --yellow: #F8EA6A;
+      --yellow-deep: #E2D62F;
+      --core: #F0C9D8;
+      --core-deep: #DFA9BE;
+      --support: #A8C7EC;
+      --support-deep: #79A8DA;
+      --style: #A8C7EC;
+      --style-deep: #79A8DA;
+      --all: var(--yellow);
+      --all-deep: var(--yellow-deep);
+      --visual: var(--yellow);
+      --visual-deep: var(--yellow-deep);
       --pink: var(--core);
       --purple: var(--support);
       --green: var(--visual);
@@ -238,8 +240,8 @@
       width: 22px;
       height: 5px;
       border-radius: var(--radius-pill);
-      background: var(--yellow);
-      border: var(--line-hair) solid var(--yellow-deep);
+      background: var(--all);
+      border: var(--line-hair) solid var(--all-deep);
       box-shadow: inset 0 0 0 1px rgba(255,255,255,.32);
     }
     .data-dot.pink { background: var(--core); border-color: var(--core-deep); }
@@ -284,7 +286,7 @@
       white-space: normal;
     }
     .popover-row + .popover-row { margin-top: 10px; }
-    .pop-dot { width: 20px; height: 8px; border-radius: var(--radius-pill); flex: 0 0 auto; background: var(--yellow); border: var(--line-hair) solid var(--yellow-deep); }
+    .pop-dot { width: 20px; height: 8px; border-radius: var(--radius-pill); flex: 0 0 auto; background: var(--all); border: var(--line-hair) solid var(--all-deep); }
     .pop-dot.pink { background: var(--core); border-color: var(--core-deep); }
     .pop-dot.purple { background: var(--support); border-color: var(--support-deep); }
     .source-sep { width: 1px; height: 14px; background: var(--line-soft); display: inline-block; }
@@ -341,10 +343,13 @@
       line-height: 1;
       font-weight: var(--weight-regular);
       letter-spacing: -0.06em;
-      transition: color var(--motion-fast) var(--ease-standard), transform var(--motion-fast) var(--ease-standard), opacity var(--motion-fast) var(--ease-standard), width var(--motion-mid) var(--ease-emphasized), padding var(--motion-mid) var(--ease-emphasized);
+      transform-origin: center bottom;
+      transition: color 180ms var(--ease-standard), transform 180ms var(--ease-emphasized), opacity 180ms var(--ease-standard), width 260ms var(--ease-emphasized), padding 260ms var(--ease-emphasized);
+      will-change: transform;
     }
     .mode-tab:hover { transform: translateY(-1px); }
-    .mode-tab:active { transform: translateY(0) scale(.985); }
+    .mode-tab:active,
+    .mode-tab.is-pressing { transform: translateY(0) scale(.975); transition-duration: 140ms; }
     .mode-tab::after {
       content: "";
       position: absolute;
@@ -356,9 +361,10 @@
       background: transparent;
       transform: scaleX(.72);
       transform-origin: left center;
-      transition: background var(--motion-fast) var(--ease-standard), transform var(--motion-mid) var(--ease-emphasized);
+      transition: background 140ms var(--ease-standard), transform 300ms var(--ease-emphasized);
     }
     .mode-tab.active::after { background: var(--ink); transform: scaleX(1); }
+    .mode-tab.is-entering::after { animation: navUnderlineDraw 300ms var(--ease-emphasized) both; }
     .mode-icon {
       position: relative;
       width: 33px;
@@ -366,7 +372,12 @@
       flex: 0 0 auto;
       display: inline-grid;
       place-items: center;
+      transform-origin: 50% 54%;
+      transition: transform 180ms var(--ease-emphasized);
+      will-change: transform;
     }
+    .mode-tab:hover .mode-icon { transform: translateY(-1px) scale(1.04); }
+    .mode-tab.is-pressing .mode-icon { transform: translateY(0) scale(.92); transition-duration: 140ms; }
     .mode-icon::before {
       content: "";
       position: absolute;
@@ -379,11 +390,19 @@
       border: 0;
       opacity: 0;
       transform: translate(-50%, -50%) scale(.78) rotate(-5deg);
-      transition: opacity var(--motion-fast) var(--ease-standard), transform var(--motion-mid) var(--ease-emphasized);
+      transition: opacity 180ms var(--ease-standard), transform 300ms cubic-bezier(.18, 1.22, .32, 1);
+      will-change: transform, opacity;
     }
     .mode-tab.active .mode-icon::before { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(-5deg); }
+    .mode-tab.is-entering .mode-icon::before { animation: navCircleAppear 300ms cubic-bezier(.18, 1.22, .32, 1) both; }
     .mode-tab svg,
-    .mode-tab img { position: relative; z-index: 1; width: 33px; height: 33px; display: block; flex: 0 0 auto; }
+    .mode-tab img { position: relative; z-index: 1; width: 33px; height: 33px; display: block; flex: 0 0 auto; transform-origin: 50% 54%; transition: transform 180ms var(--ease-emphasized); will-change: transform; }
+    .mode-tab:hover svg,
+    .mode-tab:hover img { transform: rotate(-2deg); }
+    .mode-tab.is-pressing svg,
+    .mode-tab.is-pressing img { transform: scale(.96); transition-duration: 140ms; }
+    .mode-tab.is-entering svg,
+    .mode-tab.is-entering img { animation: navIconSettle 300ms var(--ease-emphasized) both; }
     .mode-tab svg { stroke: currentColor; stroke-width: 1.45; stroke-linecap: round; stroke-linejoin: round; fill: none; }
     .mode-tab .tab-label {
       display: inline-block;
@@ -391,9 +410,30 @@
       white-space: nowrap;
       opacity: 0;
       max-width: 0;
-      transition: max-width var(--motion-mid) var(--ease-emphasized), opacity var(--motion-mid) var(--ease-standard), margin var(--motion-mid) var(--ease-emphasized);
+      transform: translateX(-4px);
+      transition: max-width 260ms var(--ease-emphasized), opacity 180ms var(--ease-standard), margin 260ms var(--ease-emphasized), transform 260ms var(--ease-emphasized);
     }
-    .mode-tab.active .tab-label { opacity: 1; max-width: 96px; }
+    .mode-tab.active .tab-label { opacity: 1; max-width: 96px; transform: translateX(0); }
+    .mode-tab.is-entering .tab-label { animation: navTextExpand 260ms var(--ease-emphasized) both; }
+    @keyframes navCircleAppear {
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(.55) rotate(-12deg); }
+      68% { opacity: 1; transform: translate(-50%, -50%) scale(1.1) rotate(-5deg); }
+      100% { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(-5deg); }
+    }
+    @keyframes navIconSettle {
+      0% { transform: scale(.92) rotate(-3deg); }
+      62% { transform: scale(1.06) rotate(1deg); }
+      100% { transform: scale(1) rotate(0); }
+    }
+    @keyframes navTextExpand {
+      0% { opacity: 0; transform: translateX(-5px); }
+      55% { opacity: .72; }
+      100% { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes navUnderlineDraw {
+      0% { transform: scaleX(0); }
+      100% { transform: scaleX(1); }
+    }
     .nav-hint {
       display: none;
       position: relative;
@@ -539,8 +579,8 @@
       height: 10px;
       border-radius: 50%;
       flex: 0 0 auto;
-      background: var(--yellow);
-      border: var(--line-hair) solid var(--yellow-deep);
+      background: var(--all);
+      border: var(--line-hair) solid var(--all-deep);
       box-shadow: inset 0 0 0 1px rgba(255,255,255,.32);
       display: none;
     }
@@ -548,7 +588,7 @@
     .tier-filter[data-tier-filter="support"] .tier-option-dot { background: var(--support); border-color: var(--support-deep); }
     .preview-toolbar[data-filter="core"] { --filter-color: var(--core); }
     .preview-toolbar[data-filter="support"] { --filter-color: var(--support); }
-    .preview-toolbar[data-filter="all"] { --filter-color: var(--yellow); }
+    .preview-toolbar[data-filter="all"] { --filter-color: var(--all); }
     body[data-mode="questionnaire"] .preview-toolbar {
       opacity: 0;
       transform: translateY(-5px);
@@ -568,12 +608,12 @@
       overflow: hidden;
       box-shadow: var(--shadow-card);
       opacity: 0;
-      filter: blur(7px);
-      transform: translate3d(0, 34px, 0) scale(.965);
+      filter: blur(2px);
+      transform: translate3d(0, 16px, 0) scale(.992);
       transition:
-        opacity 760ms cubic-bezier(.16, 1, .3, 1),
-        transform 800ms cubic-bezier(.16, 1, .3, 1),
-        filter 800ms cubic-bezier(.16, 1, .3, 1),
+        opacity 520ms cubic-bezier(.22, 1, .36, 1),
+        transform 560ms cubic-bezier(.22, 1, .36, 1),
+        filter 520ms cubic-bezier(.22, 1, .36, 1),
         box-shadow var(--motion-mid) var(--ease-standard),
         border-color var(--motion-mid) var(--ease-standard);
       will-change: opacity, transform, filter;
@@ -583,6 +623,11 @@
       opacity: 1;
       filter: blur(0);
       transform: translate3d(0, 0, 0) scale(1);
+    }
+    .sample-card.motion-controlled {
+      transition:
+        box-shadow var(--motion-mid) var(--ease-standard),
+        border-color var(--motion-mid) var(--ease-standard);
     }
     .sample-card:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
     .sample-card.is-visible:hover { transform: translate3d(0, -3px, 0) scale(1); box-shadow: var(--shadow-card-hover); border-color: #cfcec8; }
@@ -666,11 +711,7 @@
       transition: transform var(--motion-fast) var(--ease-standard), border-color var(--motion-fast) var(--ease-standard), background var(--motion-fast) var(--ease-standard);
     }
     .chip:hover { transform: translateY(-1px); }
-    /*
-      试色前视觉元素标签使用绿色：
-      .chip.visual { background: var(--visual); border-color: var(--visual-deep); color: #161611; }
-    */
-    .chip.visual { background: var(--yellow); border-color: var(--yellow-deep); color: #161611; }
+    .chip.visual { background: var(--visual); border-color: var(--visual-deep); color: #161611; }
     .chip.style { background: var(--style); border-color: var(--style-deep); color: #161611; }
     .analysis-list .chip-row {
       gap: 8px 10px;
@@ -1131,6 +1172,12 @@
     }
     .viewer.open .viewer-panel { animation: softPop 320ms var(--ease-emphasized) both; }
     .viewer.is-closing .viewer-panel { animation: softPopExit 180ms var(--ease-soft-exit) both; }
+    .viewer.motion-floating.open,
+    .viewer.motion-floating.is-closing,
+    .viewer.motion-floating.open .viewer-panel,
+    .viewer.motion-floating.is-closing .viewer-panel {
+      animation: none;
+    }
     .viewer-head {
       display: flex;
       justify-content: space-between;
@@ -1239,6 +1286,12 @@
     }
     .detail-viewer.open .detail-panel { animation: softPop 320ms var(--ease-emphasized) both; }
     .detail-viewer.is-closing .detail-panel { animation: softPopExit 180ms var(--ease-soft-exit) both; }
+    .detail-viewer.motion-floating.open,
+    .detail-viewer.motion-floating.is-closing,
+    .detail-viewer.motion-floating.open .detail-panel,
+    .detail-viewer.motion-floating.is-closing .detail-panel {
+      animation: none;
+    }
     .detail-head {
       height: 58px;
       display: flex;
@@ -2552,6 +2605,41 @@
     let activeTierFilter = 'core';
     let previewObserver = null;
     let previewRevealTimers = [];
+    const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false;
+    const motionEase = [0.16, 1, 0.3, 1];
+    const previewMotionEase = [0.22, 1, 0.36, 1];
+    const motionExitEase = [0.4, 0, 1, 1];
+    let motionApi = null;
+    const motionReady = prefersReducedMotion
+      ? Promise.resolve(null)
+      : import('https://cdn.jsdelivr.net/npm/motion@12/+esm')
+          .then(mod => {
+            motionApi = mod;
+            document.documentElement.classList.add('motion-enhanced');
+            return mod;
+          })
+          .catch(() => null);
+
+    function motionWithin(timeout = 520) {
+      if (prefersReducedMotion) return Promise.resolve(null);
+      if (motionApi) return Promise.resolve(motionApi);
+      return Promise.race([
+        motionReady,
+        new Promise(resolve => window.setTimeout(() => resolve(null), timeout))
+      ]);
+    }
+
+    function clearMotionStyle(node) {
+      if (!node) return;
+      ['opacity', 'transform', 'filter'].forEach(prop => node.style.removeProperty(prop));
+    }
+
+    function finishMotionLayer(layer, panel, cleanup) {
+      layer.classList.remove('open', 'is-closing', 'motion-floating');
+      clearMotionStyle(layer);
+      clearMotionStyle(panel);
+      cleanup?.();
+    }
 
     function setHeaderMetrics() {
       const all = samples.length;
@@ -2584,29 +2672,53 @@
 
     function previewImageReady(img) {
       if (!img) return Promise.resolve();
-      if (img.complete && img.naturalWidth > 0) return Promise.resolve();
-      if (typeof img.decode === 'function') {
-        return img.decode().catch(() => new Promise(resolve => {
-          if (img.complete) {
-            resolve();
-            return;
-          }
-          img.addEventListener('load', resolve, { once: true });
-          img.addEventListener('error', resolve, { once: true });
-        }));
-      }
-      return new Promise(resolve => {
+      const waitPaint = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      const waitLoad = () => new Promise(resolve => {
+        if (img.complete && img.naturalWidth > 0) {
+          resolve();
+          return;
+        }
         img.addEventListener('load', resolve, { once: true });
         img.addEventListener('error', resolve, { once: true });
       });
+      const waitDecode = typeof img.decode === 'function'
+        ? waitLoad().then(() => img.decode()).catch(() => waitLoad())
+        : waitLoad();
+      return waitDecode.then(waitPaint);
     }
 
     function revealPreviewCard(card, delay = 0) {
       const img = card.querySelector('.image-button img');
-      previewImageReady(img).then(() => {
+      Promise.all([previewImageReady(img), motionWithin()]).then(([, motion]) => {
         if (!card.isConnected) return;
         const timer = window.setTimeout(() => {
-          if (card.isConnected) card.classList.add('is-visible');
+          if (!card.isConnected) return;
+          const animate = motion?.animate;
+          if (!animate) {
+            card.classList.add('is-visible');
+            return;
+          }
+          card.classList.add('motion-controlled');
+          const controls = animate(card, {
+            opacity: [0, 1],
+            y: [16, 0],
+            scale: [0.992, 1],
+            filter: ['blur(2px)', 'blur(0px)']
+          }, {
+            duration: 0.52,
+            ease: previewMotionEase
+          });
+          Promise.resolve(controls.finished).then(() => {
+            if (!card.isConnected) return;
+            card.classList.add('is-visible');
+            card.classList.remove('motion-controlled');
+            clearMotionStyle(card);
+          }).catch(() => {
+            if (!card.isConnected) return;
+            card.classList.add('is-visible');
+            card.classList.remove('motion-controlled');
+            clearMotionStyle(card);
+          });
         }, delay);
         previewRevealTimers.push(timer);
       });
@@ -2633,7 +2745,7 @@
           });
         entering.forEach((entry, index) => {
           previewObserver.unobserve(entry.target);
-          const delay = Math.min(index * 90, 420);
+          const delay = Math.min(index * 46, 138);
           revealPreviewCard(entry.target, delay);
         });
       }, {
@@ -2818,8 +2930,70 @@
     let viewerCloseTimer = 0;
     let detailCloseTimer = 0;
 
+    function prepareFloatingLayer(layer, panelSelector) {
+      const panel = layer.querySelector(panelSelector);
+      const useMotion = !!motionApi && !prefersReducedMotion;
+      layer.classList.toggle('motion-floating', useMotion);
+      clearMotionStyle(layer);
+      clearMotionStyle(panel);
+    }
+
+    function animateFloatingIn(layer, panelSelector) {
+      const animate = motionApi?.animate;
+      if (!animate || prefersReducedMotion) return;
+      const panel = layer.querySelector(panelSelector);
+      animate(layer, { opacity: [0, 1] }, { duration: 0.22, ease: motionEase });
+      if (panel) {
+        animate(panel, {
+          opacity: [0, 1],
+          y: [12, 0],
+          scale: [0.985, 1]
+        }, {
+          duration: 0.36,
+          ease: motionEase
+        });
+      }
+    }
+
+    function closeFloatingLayer(layer, panelSelector, cleanup) {
+      const panel = layer.querySelector(panelSelector);
+      const animate = motionApi?.animate;
+      if (animate && !prefersReducedMotion) {
+        layer.classList.add('motion-floating', 'is-closing');
+        layer.classList.remove('open');
+        animate(layer, { opacity: [1, 0] }, { duration: 0.18, ease: motionExitEase });
+        if (panel) {
+          animate(panel, {
+            opacity: [1, 0],
+            y: [0, 8],
+            scale: [1, 0.988]
+          }, {
+            duration: 0.2,
+            ease: motionExitEase
+          });
+        }
+        return window.setTimeout(() => finishMotionLayer(layer, panel, cleanup), 230);
+      }
+      layer.classList.remove('open');
+      layer.classList.add('is-closing');
+      return window.setTimeout(() => finishMotionLayer(layer, panel, cleanup), floatingExitMs);
+    }
+
     function replayMotion(node, className = 'motion-refresh') {
       if (!node) return;
+      const animate = motionApi?.animate;
+      if (animate && !prefersReducedMotion) {
+        clearMotionStyle(node);
+        const controls = animate(node, {
+          opacity: [0.66, 1],
+          scale: [0.992, 1]
+        }, {
+          duration: 0.28,
+          ease: motionEase
+        });
+        Promise.resolve(controls.finished).finally(() => clearMotionStyle(node));
+        return;
+      }
       node.classList.remove(className);
       void node.offsetWidth;
       node.classList.add(className);
@@ -2844,27 +3018,26 @@
       const viewer = byId('viewer');
       clearTimeout(viewerCloseTimer);
       viewer.classList.remove('is-closing');
+      prepareFloatingLayer(viewer, '.viewer-panel');
       viewerGallery = Array.isArray(gallery) && gallery.length ? gallery : [sample];
       viewerIndex = Math.max(0, viewerGallery.findIndex(item => item.id === sample.id));
       renderViewerSample();
       viewer.classList.add('open');
       viewer.setAttribute('aria-hidden', 'false');
+      requestAnimationFrame(() => animateFloatingIn(viewer, '.viewer-panel'));
     }
 
     function closeViewer() {
       const viewer = byId('viewer');
       if (!viewer.classList.contains('open')) return;
       clearTimeout(viewerCloseTimer);
-      viewer.classList.remove('open');
-      viewer.classList.add('is-closing');
       viewer.setAttribute('aria-hidden', 'true');
-      viewerCloseTimer = window.setTimeout(() => {
-        viewer.classList.remove('is-closing');
+      viewerCloseTimer = closeFloatingLayer(viewer, '.viewer-panel', () => {
         viewer.classList.remove('has-gallery');
         byId('viewerImage').removeAttribute('src');
         viewerGallery = [];
         viewerIndex = -1;
-      }, floatingExitMs);
+      });
     }
 
     function moveViewer(step) {
@@ -2913,6 +3086,7 @@
       const detailViewer = byId('detailViewer');
       clearTimeout(detailCloseTimer);
       detailViewer.classList.remove('is-closing');
+      prepareFloatingLayer(detailViewer, '.detail-panel');
       byId('detailTitle').textContent = `${info.name} · ${tierName(sample.tier)}`;
       byId('detailBody').innerHTML = `
         <button class="detail-image" type="button" data-view-id="${sample.id}" aria-label="查看 ${escapeHtml(info.name)} 大图">
@@ -2921,19 +3095,17 @@
         ${analysisCopyHtml(sample, true)}`;
       detailViewer.classList.add('open');
       detailViewer.setAttribute('aria-hidden', 'false');
+      requestAnimationFrame(() => animateFloatingIn(detailViewer, '.detail-panel'));
     }
 
     function closeDetail() {
       const detailViewer = byId('detailViewer');
       if (!detailViewer.classList.contains('open')) return;
       clearTimeout(detailCloseTimer);
-      detailViewer.classList.remove('open');
-      detailViewer.classList.add('is-closing');
       detailViewer.setAttribute('aria-hidden', 'true');
-      detailCloseTimer = window.setTimeout(() => {
-        detailViewer.classList.remove('is-closing');
+      detailCloseTimer = closeFloatingLayer(detailViewer, '.detail-panel', () => {
         byId('detailBody').innerHTML = '';
-      }, floatingExitMs);
+      });
     }
 
     function renderPreview() {
@@ -2943,7 +3115,7 @@
       root.innerHTML = list.length ? list.map(sample => `
         <article class="sample-card" data-tier="${sample.tier}" data-detail-id="${sample.id}" tabindex="0" role="button" aria-label="查看 ${escapeHtml(meta(sample).name)} 的风格解析">
           <div class="image-button" data-view-id="${sample.id}" aria-label="查看 ${escapeHtml(meta(sample).name)} 大图">
-            <img src="${escapeHtml(sample.image)}" alt="${escapeHtml(meta(sample).name)}" loading="eager" fetchpriority="high" decoding="async">
+            <img src="${escapeHtml(sample.image)}" alt="${escapeHtml(meta(sample).name)}" loading="eager" fetchpriority="high" decoding="sync">
             <button class="zoom-mark" type="button" data-view-id="${sample.id}" aria-label="查看 ${escapeHtml(meta(sample).name)} 大图"><svg viewBox="0 0 20 20"><circle cx="8.4" cy="8.4" r="5.2"/><path d="M12.4 12.4 17 17"/></svg></button>
           </div>
           <div class="card-info">
@@ -2998,14 +3170,39 @@
         </div>`).join('');
     }
 
+    const navPressTimers = new WeakMap();
+    const navEnterTimers = new WeakMap();
+
+    function runModeTabPress(btn) {
+      if (prefersReducedMotion || !btn) return;
+      clearTimeout(navPressTimers.get(btn));
+      btn.classList.remove('is-pressing');
+      void btn.offsetWidth;
+      btn.classList.add('is-pressing');
+      navPressTimers.set(btn, window.setTimeout(() => btn.classList.remove('is-pressing'), 140));
+    }
+
+    function runModeTabEnter(btn) {
+      if (prefersReducedMotion || !btn) return;
+      clearTimeout(navEnterTimers.get(btn));
+      btn.classList.remove('is-entering');
+      void btn.offsetWidth;
+      btn.classList.add('is-entering');
+      navEnterTimers.set(btn, window.setTimeout(() => btn.classList.remove('is-entering'), 360));
+    }
+
     function setMode(mode) {
+      const previousMode = document.body.dataset.mode;
+      let activeTab = null;
       document.body.dataset.mode = mode;
       document.querySelectorAll('.mode').forEach(node => node.classList.toggle('active', node.id === mode));
       document.querySelectorAll('.mode-tab').forEach(btn => {
         const active = btn.dataset.mode === mode;
         btn.classList.toggle('active', active);
         btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+        if (active) activeTab = btn;
       });
+      if (previousMode !== mode) runModeTabEnter(activeTab);
       byId('navHint').textContent = modeHints[mode] || modeHints.preview;
       requestAnimationFrame(() => {
         updateStickyMetrics();
@@ -3107,7 +3304,10 @@
 
     document.addEventListener('click', event => {
       const modeBtn = event.target.closest('.mode-tab');
-      if (modeBtn) setMode(modeBtn.dataset.mode);
+      if (modeBtn) {
+        runModeTabPress(modeBtn);
+        setMode(modeBtn.dataset.mode);
+      }
       const tierTrigger = event.target.closest('#tierSelectTrigger');
       if (tierTrigger) {
         const toolbar = tierTrigger.closest('.preview-toolbar');
