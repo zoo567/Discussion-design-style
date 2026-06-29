@@ -290,6 +290,103 @@
     .pop-dot.pink { background: var(--core); border-color: var(--core-deep); }
     .pop-dot.purple { background: var(--support); border-color: var(--support-deep); }
     .source-sep { width: 1px; height: 14px; background: var(--line-soft); display: inline-block; }
+    .mobile-info-trigger,
+    .mobile-info-panel {
+      display: none;
+    }
+    .mobile-info-trigger {
+      width: 34px;
+      height: 34px;
+      border: var(--line-hair) solid var(--line);
+      border-radius: 50%;
+      background: rgba(255,255,252,.94);
+      color: var(--ink);
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      line-height: 1;
+      font-weight: var(--weight-medium);
+      box-shadow: var(--shadow-soft);
+      transition: transform var(--motion-fast) var(--ease-standard), box-shadow var(--motion-fast) var(--ease-standard), background var(--motion-fast) var(--ease-standard);
+    }
+    .mobile-info-trigger:hover { transform: translateY(-1px); box-shadow: 0 10px 22px rgba(17,17,15,.055); }
+    .mobile-info-trigger[aria-expanded="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
+    .mobile-info-panel {
+      position: absolute;
+      right: 16px;
+      top: calc(100% + 10px);
+      width: min(330px, calc(100vw - 32px));
+      z-index: 90;
+      padding: 18px 18px 16px;
+      border: var(--line-hair) solid var(--line);
+      border-radius: var(--radius-lg);
+      background: rgba(255,255,252,.97);
+      box-shadow: var(--shadow);
+      color: #55544d;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-6px) scale(.985);
+      transform-origin: top right;
+      transition: opacity 180ms var(--ease-standard), transform 260ms var(--ease-emphasized);
+    }
+    .mobile-info-panel.open {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0) scale(1);
+    }
+    .mobile-info-head {
+      display: grid;
+      gap: 6px;
+      margin-bottom: 14px;
+      color: #aaa8a1;
+      font-size: var(--text-xxs);
+      line-height: 1.35;
+      font-weight: var(--weight-regular);
+    }
+    .mobile-info-head strong {
+      color: #77766f;
+      font-size: var(--text-sm);
+      font-weight: var(--weight-regular);
+    }
+    .mobile-info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      padding: 12px 0;
+      border-top: var(--line-hair) solid var(--line-soft);
+      border-bottom: var(--line-hair) solid var(--line-soft);
+      margin-bottom: 12px;
+    }
+    .mobile-info-grid span {
+      display: grid;
+      gap: 5px;
+      color: #aaa8a1;
+      font-size: 11px;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+    .mobile-info-grid b {
+      color: var(--ink);
+      font-size: 20px;
+      line-height: 1;
+      font-weight: var(--weight-medium);
+    }
+    .mobile-info-row,
+    .mobile-info-panel p {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 8px 0 0;
+      color: #66655e;
+      font-size: 12px;
+      line-height: 1.55;
+      font-weight: var(--weight-regular);
+    }
+    .mobile-info-row i {
+      width: 1px;
+      height: 12px;
+      background: var(--line-soft);
+    }
     body.is-scrolled .topbar { box-shadow: 0 12px 34px rgba(17,17,15,.035); }
     .nav-shell {
       position: sticky;
@@ -1447,19 +1544,326 @@
       }
     }
     @media (max-width: 760px) {
-      :root { --page-pad: 18px; }
-      .topbar-inner { padding: 24px 18px 18px; }
-      .top-left-zone { align-items: flex-start; flex-direction: column; gap: 18px; }
-      .data-zone { gap: 18px; overflow-x: auto; justify-content: flex-start; padding-bottom: 8px; }
-      main { padding: 20px 16px 72px; }
-      .mode-tabs { gap: 24px; }
-      .mode-tab { height: 48px; padding: 0 0 10px; font-size: var(--text-sm); }
-      .mode-icon { width: 33px; height: 33px; }
+      :root {
+        --page-pad: 14px;
+        --topbar-min-h: 72px;
+        --header-h: 72px;
+        --mode-h: 58px;
+      }
+      body { overflow-x: hidden; }
+      .topbar-inner {
+        width: 100%;
+        min-height: var(--topbar-min-h);
+        padding: 12px 16px 10px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .top-left-zone {
+        flex: 1 1 auto;
+        min-width: 0;
+        align-items: flex-end;
+        flex-direction: row;
+        gap: 0;
+      }
+      .author-mark,
+      .top-center-mark,
+      .data-zone {
+        display: none;
+      }
+      .mobile-info-trigger {
+        display: inline-flex;
+        flex: 0 0 auto;
+      }
+      .mobile-info-panel { display: block; }
+      .mobile-info-panel[hidden] { display: none !important; }
+      .mode-tabs {
+        width: auto;
+        gap: 22px;
+      }
+      .mode-tab {
+        height: 44px;
+        padding: 0 0 8px;
+        font-size: 13px;
+      }
+      .mode-tab:not(.active) .tab-label { display: none; }
+      .mode-tab.active .tab-label { display: inline; }
+      .mode-icon,
       .mode-tab svg,
-      .mode-tab img { width: 33px; height: 33px; }
-      .grid { grid-template-columns: 1fr; }
-      .question-row { grid-template-columns: 1fr; gap: 10px; }
+      .mode-tab img {
+        width: 32px;
+        height: 32px;
+      }
+      .mode-tab::after {
+        bottom: 0;
+        height: 2px;
+      }
+      .nav-shell {
+        top: var(--header-h);
+        padding: 9px 16px 11px;
+      }
+      .nav-shell::before {
+        background-size: 18px 18px;
+        opacity: .42;
+      }
+      .preview-toolbar {
+        width: 100%;
+        justify-content: flex-end;
+      }
+      .tier-select { gap: 8px; }
+      .tier-select-caption { font-size: 12px; }
+      .tier-select-trigger {
+        min-width: 112px;
+        height: 36px;
+        padding: 0 14px;
+        font-size: 15px;
+      }
+      .tier-menu {
+        right: 0;
+        min-width: 138px;
+      }
+      .nav-hint { display: none; }
+      main { padding: 14px 14px 72px; }
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+      .sample-card { border-radius: 14px; }
+      .image-button {
+        padding: 12px;
+        min-height: 0;
+      }
+      .image-button img { border-radius: 12px; }
+      .zoom-mark {
+        opacity: 1;
+        transform: translateY(0) scale(.78);
+        top: 10px;
+        right: 10px;
+      }
+      .zoom-mark {
+        display: none !important;
+      }
+      .card-info {
+        padding: 14px 12px 16px;
+        gap: 8px;
+      }
+      .card-head {
+        display: block;
+        margin-bottom: 12px;
+      }
+      .sample-id {
+        font-size: 17px;
+        line-height: 1.06;
+        letter-spacing: -0.055em;
+      }
+      .sample-card .source-line {
+        display: none;
+      }
+      .sample-card .tier-label,
+      .sample-card .tier-badge {
+        margin-top: 7px;
+        font-size: 11px;
+        gap: 5px;
+        color: #7a7972;
+      }
+      .sample-card .tier-badge::before {
+        width: 8px;
+        height: 8px;
+      }
+      .sample-card .chip-row {
+        gap: 6px 5px;
+        margin-top: 8px;
+      }
+      .sample-card .chip {
+        min-height: 26px;
+        font-size: 11px;
+        padding: 4px 7px;
+        border-width: 1px;
+      }
+      .sample-card .chip-row .chip:nth-child(n+6) { display: none; }
+      .question-row {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
       .q-text { font-size: 15px; }
+      body[data-mode="analysis"] main {
+        padding: 14px 14px 80px;
+        height: auto;
+        min-height: 0;
+        overflow: visible;
+      }
+      body[data-mode="analysis"] #analysis,
+      body[data-mode="analysis"] #analysis > .content-wrap,
+      body[data-mode="analysis"] .analysis-layout,
+      .analysis-list {
+        height: auto;
+      }
+      .analysis-layout { display: block; }
+      .analysis-index {
+        position: sticky;
+        top: calc(var(--header-h) + var(--mode-h) + 8px);
+        z-index: 35;
+        left: auto;
+        transform: none;
+        width: 100%;
+        height: auto;
+        min-height: 0;
+        max-height: none;
+        margin: 0 0 16px;
+        padding: 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+        border-radius: var(--radius-pill);
+        background: rgba(250,250,250,.86);
+        backdrop-filter: blur(14px);
+      }
+      .analysis-index::before,
+      .analysis-index::after { display: none; }
+      .analysis-index-list {
+        display: flex;
+        flex-direction: row;
+        width: max-content;
+        min-width: 100%;
+        height: 50px;
+        padding: 6px;
+        gap: 8px;
+        border: var(--line-hair) solid var(--line-soft);
+        border-radius: var(--radius-pill);
+        background: rgba(255,255,252,.78);
+        box-shadow: 0 8px 20px rgba(17,17,15,.035);
+      }
+      .analysis-index-link {
+        width: 38px;
+        height: 38px;
+        min-height: 0;
+        flex: 0 0 auto;
+        border-radius: var(--radius-pill);
+        font-size: 14px;
+      }
+      .analysis-index-link:hover {
+        background: transparent;
+        font-weight: var(--weight-medium);
+      }
+      .analysis-index-link.active {
+        width: 38px;
+        height: 38px;
+        min-height: 0;
+        border-radius: var(--radius-pill);
+        box-shadow: inset 0 0 0 2px var(--ink);
+        font-size: 14px;
+        font-weight: var(--weight-medium);
+      }
+      .analysis-list { padding-left: 0; }
+      .analysis-item {
+        grid-template-columns: 1fr;
+        gap: 18px;
+        min-height: auto;
+        height: auto;
+        padding: 18px 0 34px;
+        align-items: start;
+      }
+      .analysis-visual { justify-content: center; }
+      .analysis-image-frame {
+        height: auto;
+        min-height: 0;
+        padding: 0;
+      }
+      .analysis-image-inner {
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+      .analysis-image img {
+        width: 100%;
+        max-height: none;
+        height: auto;
+        object-fit: contain;
+        border-radius: 16px;
+      }
+      .analysis-copy {
+        height: auto;
+        max-height: none;
+        overflow: visible;
+        padding-top: 0;
+        max-width: none;
+      }
+      .analysis-copy-body {
+        max-height: none;
+        overflow: visible;
+        padding-right: 0;
+      }
+      .analysis-meta {
+        font-size: 14px;
+        gap: 10px;
+      }
+      .analysis-section-title,
+      .section-title {
+        font-size: 13px;
+        margin-bottom: 8px;
+      }
+      body[data-mode="analysis"] .analysis-list .chip-row {
+        gap: 6px 6px;
+        margin-top: 8px;
+      }
+      body[data-mode="analysis"] .analysis-list .chip {
+        min-height: 26px;
+        font-size: 11px;
+        padding: 4px 8px;
+        border-width: 1px;
+      }
+      .analysis-note {
+        font-size: 16px;
+        line-height: 1.72;
+        max-height: none;
+        overflow: visible;
+      }
+      body[data-mode="analysis"] .analysis-index,
+      body[data-mode="analysis"] .analysis-switcher { display: none !important; }
+      body[data-mode="analysis"] .analysis-list {
+        display: grid;
+        gap: 38px;
+        padding-left: 0 !important;
+      }
+      body[data-mode="analysis"] .analysis-item {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+        height: auto !important;
+        min-height: 0 !important;
+        padding: 0 0 38px !important;
+        scroll-margin-top: calc(var(--header-h) + var(--mode-h) + 20px);
+      }
+      body[data-mode="analysis"] .analysis-copy {
+        width: 100%;
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+      }
+      body[data-mode="analysis"] .analysis-copy-body,
+      body[data-mode="analysis"] .analysis-note {
+        max-height: none !important;
+        overflow: visible !important;
+      }
+    }
+    @media (max-width: 430px) {
+      .grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+      .sample-card .chip-row .chip:nth-child(n+7) { display: inline-flex; }
+      .sample-card .sample-id { font-size: 22px; }
+      .sample-card .tier-badge {
+        font-size: 12px;
+      }
+      .sample-card .chip {
+        min-height: 26px;
+        font-size: 11px;
+        padding: 4px 8px;
+      }
+      body[data-mode="analysis"] .analysis-list .chip {
+        min-height: 26px;
+        font-size: 11px;
+        padding: 4px 8px;
+      }
     }
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
@@ -1505,6 +1909,22 @@
           <div class="popover-row"><i class="pop-dot pink"></i><span>核心参考：设计精致、同类竞品、参考价值大。</span></div>
           <div class="popover-row"><i class="pop-dot purple"></i><span>辅助参考：设计感欠缺，或仅有部分设计细节值得观察。</span></div>
         </div>
+      </div>
+      <button class="mobile-info-trigger" id="mobileInfoTrigger" type="button" aria-expanded="false" aria-controls="mobileInfoPanel" aria-label="查看页面说明">?</button>
+      <div class="mobile-info-panel" id="mobileInfoPanel" hidden>
+        <div class="mobile-info-head">
+          <strong>页面说明</strong>
+          <span>视觉偏好确认辅助页</span>
+        </div>
+        <p>本页用于快速浏览参考图、理解风格解析，并辅助甲方回答风格问卷；参考图不代表最终设计方案。</p>
+        <div class="mobile-info-grid" aria-label="参考数据">
+          <span><b id="mobileCountAll">0</b>全部参考</span>
+          <span><b id="mobileCountCore">0</b>核心参考</span>
+          <span><b id="mobileCountSupport">0</b>辅助参考</span>
+        </div>
+        <div class="mobile-info-row"><span>来源：APP 截图 <b id="mobileAppCount">0</b></span><i></i><span>网络设计图 <b id="mobileWebCount">0</b></span></div>
+        <div class="mobile-info-row"><span>核心参考：设计精致、同类竞品、参考价值大。</span></div>
+        <div class="mobile-info-row"><span>辅助参考：设计感欠缺，或仅有部分设计细节值得观察。</span></div>
       </div>
     </div>
   </header>
@@ -2598,6 +3018,12 @@
     const tierFilterName = (tier) => tier === 'all' ? '全部参考' : tierName(tier);
     const tierClass = (tier) => tier === 'core' ? 'core' : 'support';
     const byId = (id) => document.getElementById(id);
+    const setText = (id, value) => {
+      const node = byId(id);
+      if (node) node.textContent = value;
+    };
+    const mobileMediaQuery = window.matchMedia?.('(max-width: 760px)');
+    const isMobileViewport = () => Boolean(mobileMediaQuery?.matches);
     const meta = (sample) => {
       const item = displayMeta[sample.id] || [`${sample.source === '网络来源' ? 'Online Source' : 'App Reference'}`, `reference_${sample.id}`];
       return { name: item[0], slug: item[1] };
@@ -2610,6 +3036,8 @@
     const previewMotionEase = [0.22, 1, 0.36, 1];
     const motionExitEase = [0.4, 0, 1, 1];
     let motionApi = null;
+    let lastMobileViewport = isMobileViewport();
+    let mobileAnalysisScrollTick = false;
     const motionReady = prefersReducedMotion
       ? Promise.resolve(null)
       : import('https://cdn.jsdelivr.net/npm/motion@12/+esm')
@@ -2647,11 +3075,16 @@
       const support = samples.filter(item => item.tier === 'support').length;
       const app = samples.filter(item => item.source === 'APP来源').length;
       const web = samples.filter(item => item.source === '网络来源').length;
-      byId('countAll').textContent = all;
-      byId('countCore').textContent = core;
-      byId('countSupport').textContent = support;
-      byId('appCount').textContent = app;
-      byId('webCount').textContent = web;
+      setText('countAll', all);
+      setText('countCore', core);
+      setText('countSupport', support);
+      setText('appCount', app);
+      setText('webCount', web);
+      setText('mobileCountAll', all);
+      setText('mobileCountCore', core);
+      setText('mobileCountSupport', support);
+      setText('mobileAppCount', app);
+      setText('mobileWebCount', web);
     }
 
     function renderChips(tags, type, limit = 6) {
@@ -2855,13 +3288,97 @@
       return normalizedAnalysisId();
     }
 
+    function setMobileInfoOpen(open) {
+      const trigger = byId('mobileInfoTrigger');
+      const panel = byId('mobileInfoPanel');
+      if (!trigger || !panel) return;
+      trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      panel.hidden = false;
+      panel.classList.toggle('open', open);
+      if (!open) {
+        window.setTimeout(() => {
+          if (!panel.classList.contains('open')) panel.hidden = true;
+        }, 180);
+      }
+    }
+
+    function analysisItemById(id) {
+      if (!id) return null;
+      return document.querySelector(`#analysisList [data-analysis-id="${CSS.escape(id)}"]`);
+    }
+
+    function mobileAnalysisOffset() {
+      const topH = byId('topbar')?.getBoundingClientRect().height || 0;
+      const navH = byId('navShell')?.getBoundingClientRect().height || 0;
+      const indexH = byId('analysisIndexList')?.closest('.analysis-index')?.getBoundingClientRect().height || 0;
+      return Math.ceil(topH + navH + indexH + 18);
+    }
+
+    function scrollToMobileAnalysisItem(id, behavior = 'smooth') {
+      if (!isMobileViewport()) return;
+      const item = analysisItemById(id);
+      if (!item) return;
+      const target = Math.max(0, window.scrollY + item.getBoundingClientRect().top - mobileAnalysisOffset());
+      window.scrollTo({ top: target, behavior: behavior === 'auto' ? 'auto' : 'smooth' });
+    }
+
+    function syncMobileAnalysisFromScroll() {
+      if (!isMobileViewport() || document.body.dataset.mode !== 'analysis') return;
+      const items = Array.from(document.querySelectorAll('#analysisList [data-analysis-id]'));
+      if (!items.length) return;
+      const anchor = mobileAnalysisOffset() + 8;
+      let best = items[0];
+      let bestDistance = Infinity;
+      items.forEach(item => {
+        const rect = item.getBoundingClientRect();
+        const distance = Math.abs(rect.top - anchor);
+        if (distance < bestDistance) {
+          bestDistance = distance;
+          best = item;
+        }
+      });
+      const id = best?.dataset.analysisId;
+      if (id && id !== activeAnalysisSampleId) {
+        activeAnalysisSampleId = id;
+        setActiveAnalysisIndex(id, 'auto');
+      }
+    }
+
+    function scheduleMobileAnalysisFromScroll() {
+      if (mobileAnalysisScrollTick) return;
+      mobileAnalysisScrollTick = true;
+      requestAnimationFrame(() => {
+        mobileAnalysisScrollTick = false;
+        syncMobileAnalysisFromScroll();
+      });
+    }
+
+    function openSampleAnalysis(sample, behavior = 'smooth') {
+      if (!sample) return;
+      activeAnalysisSampleId = sample.id;
+      if (document.body.dataset.mode !== 'analysis') {
+        setMode('analysis');
+        requestAnimationFrame(() => scrollToMobileAnalysisItem(sample.id, behavior));
+      } else {
+        jumpToAnalysis(sample.id, behavior);
+      }
+    }
+
     function jumpToAnalysis(id, behavior = 'smooth') {
       const list = currentAnalysisSamples();
       if (!list.some(item => item.id === id)) return false;
       activeAnalysisSampleId = id;
       renderAnalysis();
-      requestAnimationFrame(() => setActiveAnalysisIndex(id));
-      if (document.body.dataset.mode === 'analysis') window.scrollTo({ top: 0, behavior: behavior === 'auto' ? 'auto' : 'smooth' });
+      requestAnimationFrame(() => {
+        setActiveAnalysisIndex(id, behavior);
+        if (document.body.dataset.mode === 'analysis') {
+          if (isMobileViewport()) {
+            scrollToMobileAnalysisItem(id, behavior);
+          } else {
+            window.scrollTo({ top: 0, behavior: behavior === 'auto' ? 'auto' : 'smooth' });
+          }
+        }
+      });
       return true;
     }
 
@@ -3081,6 +3598,31 @@
         </div>`;
     }
 
+    function analysisItemHtml(sample) {
+      return `
+        <article class="analysis-item" data-analysis-id="${escapeHtml(sample.id)}">
+          <div class="analysis-visual">
+            <button class="analysis-image" type="button" data-view-id="${sample.id}" aria-label="查看 ${escapeHtml(meta(sample).name)} 大图">
+              <span class="analysis-image-frame">
+                <span class="analysis-image-inner">
+                  <img src="${escapeHtml(sample.image)}" alt="${escapeHtml(meta(sample).name)}" loading="lazy" decoding="async">
+                  <span class="tier-badge ${tierClass(sample.tier)}">${tierName(sample.tier)}</span>
+                </span>
+              </span>
+            </button>
+          </div>
+          ${analysisCopyHtml(sample)}
+        </article>`;
+    }
+
+    function analysisSwitcherHtml(sample, index, list) {
+      return `
+        <div class="analysis-switcher" aria-label="${escapeHtml(meta(sample).name)} 上下切换">
+          <button class="analysis-step prev" type="button" data-analysis-move="-1" data-analysis-from="${sample.id}" ${index === 0 ? 'disabled' : ''} aria-label="上一张参考"><svg viewBox="0 0 18 24"><path d="M3 12h12"/><path d="M9.5 6 15 12l-5.5 6"/></svg></button>
+          <button class="analysis-step next" type="button" data-analysis-move="1" data-analysis-from="${sample.id}" ${index === list.length - 1 ? 'disabled' : ''} aria-label="下一张参考"><svg viewBox="0 0 18 24"><path d="M3 12h12"/><path d="M9.5 6 15 12l-5.5 6"/></svg></button>
+        </div>`;
+    }
+
     function openDetail(sample) {
       const info = meta(sample);
       const detailViewer = byId('detailViewer');
@@ -3136,24 +3678,13 @@
       const sample = list.find(item => item.id === activeId);
       const index = Math.max(0, list.findIndex(item => item.id === activeId));
       renderAnalysisIndex(list);
-      root.innerHTML = sample ? `
-        <article class="analysis-item" data-analysis-id="${escapeHtml(sample.id)}">
-          <div class="analysis-visual">
-            <button class="analysis-image" type="button" data-view-id="${sample.id}" aria-label="查看 ${escapeHtml(meta(sample).name)} 大图">
-              <span class="analysis-image-frame">
-                <span class="analysis-image-inner">
-                  <img src="${escapeHtml(sample.image)}" alt="${escapeHtml(meta(sample).name)}" loading="lazy" decoding="async">
-                  <span class="tier-badge ${tierClass(sample.tier)}">${tierName(sample.tier)}</span>
-                </span>
-              </span>
-            </button>
-          </div>
-          ${analysisCopyHtml(sample)}
-        </article>
-        <div class="analysis-switcher" aria-label="${escapeHtml(meta(sample).name)} 上下切换">
-          <button class="analysis-step prev" type="button" data-analysis-move="-1" data-analysis-from="${sample.id}" ${index === 0 ? 'disabled' : ''} aria-label="上一张参考"><svg viewBox="0 0 18 24"><path d="M3 12h12"/><path d="M9.5 6 15 12l-5.5 6"/></svg></button>
-          <button class="analysis-step next" type="button" data-analysis-move="1" data-analysis-from="${sample.id}" ${index === list.length - 1 ? 'disabled' : ''} aria-label="下一张参考"><svg viewBox="0 0 18 24"><path d="M3 12h12"/><path d="M9.5 6 15 12l-5.5 6"/></svg></button>
-        </div>` : '<div class="empty">当前筛选下暂无参考图。</div>';
+      if (!sample) {
+        root.innerHTML = '<div class="empty">当前筛选下暂无参考图。</div>';
+      } else if (isMobileViewport()) {
+        root.innerHTML = list.map(analysisItemHtml).join('');
+      } else {
+        root.innerHTML = `${analysisItemHtml(sample)}${analysisSwitcherHtml(sample, index, list)}`;
+      }
       if (document.body.dataset.mode === 'analysis') {
         requestAnimationFrame(() => {
           syncAnalysisPanelHeight();
@@ -3210,7 +3741,9 @@
           normalizedAnalysisId();
           renderAnalysis();
           syncAnalysisIndex();
-          window.scrollTo({ top: 0, behavior: 'auto' });
+          if (!isMobileViewport()) {
+            window.scrollTo({ top: 0, behavior: 'auto' });
+          }
         }
       });
     }
@@ -3240,11 +3773,13 @@
 
     function handleScroll() {
       scheduleAnalysisSync();
+      scheduleMobileAnalysisFromScroll();
       document.body.classList.toggle('is-scrolled', window.scrollY > 8);
     }
 
     function handleAnalysisWheel(event) {
       if (document.body.dataset.mode !== 'analysis') return;
+      if (isMobileViewport()) return;
       if (byId('viewer').classList.contains('open') || byId('detailViewer').classList.contains('open')) return;
       if (event.target?.closest?.('.topbar, .nav-shell, .analysis-index, .viewer, .detail-viewer')) return;
       if (Math.abs(event.deltaY) < Math.abs(event.deltaX)) return;
@@ -3307,6 +3842,13 @@
       if (modeBtn) {
         runModeTabPress(modeBtn);
         setMode(modeBtn.dataset.mode);
+        return;
+      }
+      const mobileInfoBtn = event.target.closest('#mobileInfoTrigger');
+      if (mobileInfoBtn) {
+        event.stopPropagation();
+        setMobileInfoOpen(mobileInfoBtn.getAttribute('aria-expanded') !== 'true');
+        return;
       }
       const tierTrigger = event.target.closest('#tierSelectTrigger');
       if (tierTrigger) {
@@ -3341,17 +3883,32 @@
       if (viewBtn) {
         event.stopPropagation();
         const sample = samples.find(item => item.id === viewBtn.dataset.viewId);
-        if (sample) openViewer(sample, viewBtn.closest('#preview') ? currentFilteredSamples() : [sample]);
+        if (sample) {
+          if (isMobileViewport() && viewBtn.closest('#preview')) {
+            openSampleAnalysis(sample);
+          } else {
+            openViewer(sample, viewBtn.closest('#preview') ? currentFilteredSamples() : [sample]);
+          }
+        }
         return;
       }
       const detailCard = event.target.closest('[data-detail-id]');
       if (detailCard) {
         const sample = samples.find(item => item.id === detailCard.dataset.detailId);
-        if (sample) openDetail(sample);
+        if (sample) {
+          if (isMobileViewport()) {
+            openSampleAnalysis(sample);
+          } else {
+            openDetail(sample);
+          }
+        }
       }
       if (!event.target.closest('.preview-toolbar')) {
         document.querySelectorAll('.preview-toolbar').forEach(node => node.classList.remove('open'));
         byId('tierSelectTrigger')?.setAttribute('aria-expanded', 'false');
+      }
+      if (!event.target.closest('#mobileInfoPanel') && !event.target.closest('#mobileInfoTrigger')) {
+        setMobileInfoOpen(false);
       }
     });
     document.addEventListener('keydown', event => {
@@ -3359,7 +3916,13 @@
       if (detailCard && (event.key === 'Enter' || event.key === ' ')) {
         event.preventDefault();
         const sample = samples.find(item => item.id === detailCard.dataset.detailId);
-        if (sample) openDetail(sample);
+        if (sample) {
+          if (isMobileViewport()) {
+            openSampleAnalysis(sample);
+          } else {
+            openDetail(sample);
+          }
+        }
       }
     });
     byId('viewerClose').addEventListener('click', closeViewer);
@@ -3372,8 +3935,23 @@
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('wheel', handleAnalysisWheel, { passive: false });
     window.addEventListener('resize', () => {
+      const nowMobile = isMobileViewport();
       updateStickyMetrics();
       updateAnalysisStageMetrics();
+      if (nowMobile !== lastMobileViewport) {
+        lastMobileViewport = nowMobile;
+        setMobileInfoOpen(false);
+        if (document.body.dataset.mode === 'analysis') {
+          renderAnalysis();
+          requestAnimationFrame(() => {
+            if (nowMobile) {
+              scrollToMobileAnalysisItem(activeAnalysisSampleId, 'auto');
+            } else {
+              window.scrollTo({ top: 0, behavior: 'auto' });
+            }
+          });
+        }
+      }
     });
     document.addEventListener('load', event => {
       if (event.target?.matches?.('#analysisList img')) {
@@ -3392,6 +3970,7 @@
       const tierMenuOpen = !!document.querySelector('.preview-toolbar.open');
       if (
         document.body.dataset.mode === 'analysis' &&
+        !isMobileViewport() &&
         !viewerOpen &&
         !detailOpen &&
         !isTypingTarget &&
